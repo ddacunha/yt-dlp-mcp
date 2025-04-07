@@ -23,6 +23,6 @@
     "indentSize": 2,
     "tabSize": 2
   },
-  "include": ["src/**/*.mts", "src/types/*.d.ts"],
+  "include": ["src/**/*.mts", "src/**/*.ts", "src/types/*.d.ts"],
   "exclude": ["node_modules", "lib"]
 }

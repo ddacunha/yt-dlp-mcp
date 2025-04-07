@@ -16,6 +16,7 @@ import { _spawnPromise, safeCleanup } from "./modules/utils.js";
 import { downloadVideo } from "./modules/video.js";
 import { downloadAudio } from "./modules/audio.js";
 import { listSubtitles, downloadSubtitles } from "./modules/subtitle.js";
+import { downloadComments } from "./modules/comment.js";
 
 const VERSION = '0.6.26';
 
@@ -148,6 +149,17 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ["url"],
         },
       },
+      {
+        name: "download_comments",
+        description: "Download comments for a video and return them in JSON format.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            url: { type: "string", description: "URL of the video" }
+          },
+          required: ["url"],
+        },
+      },
     ],
   };
 });
@@ -189,6 +201,7 @@ server.setRequestHandler(
       url: string;
       language?: string;
       resolution?: string;
+      maxComments?: number;
     };
 
     if (toolName === "list_subtitle_languages") {
@@ -210,6 +223,11 @@ server.setRequestHandler(
       return handleToolExecution(
         () => downloadAudio(args.url, CONFIG),
         "Error downloading audio"
+      );
+    } else if (toolName === "download_comments") {
+      return handleToolExecution(
+        () => downloadComments(args.url, CONFIG),
+        "Error downloading comments"
       );
     } else {
       return {
